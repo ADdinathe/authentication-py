@@ -4,6 +4,7 @@ import hmac
 import hashlib
 from fastapi import FastAPI, Form, Cookie
 from fastapi.responses import Response
+import json
 
 app = FastAPI()
 SECRET_KEY = "94246ce346bbe6fb3db96c8176e76268a8642be5842ee76ba6b762253504c385"
@@ -79,11 +80,17 @@ def login_page(username: str = Form(...), password: str = Form(...)):
     user = users.get(username)
 
     if not user or not verify_password(username, password):
-        return Response(f"I do not know you!: {username}", media_type="text/html")
+        return Response(
+            json.dumps({
+                "success": False,
+                "message": f"I do not know you!: {username}"
+            }), media_type="application/json")
     else:
-        response = Response(f"login: {username} <br/> balance: {user['balance']}", media_type="text/html")
+        response = Response(
+            json.dumps({
+                "success": True,
+                "message": f"login: {username} <br/> balance: {user['balance']}"
+            }), media_type="application/json")
         signed_username = base64.b64encode(username.encode()).decode() + '.' + sign_data(username)
         response.set_cookie(key="username", value=signed_username)
         return response
-
-
