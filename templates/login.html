@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+
+<head>
+<title>login page</title>
+    <meta charset="utf-8" />
+
+    <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function(){
+
+            let btn = document.querySelector('button[type=submit]')
+            console.log(btn)
+            btn.addEventListener('click', async function(e){
+                e.preventDefault();
+
+                let username = document.querySelector('input[name=username]').value;
+                let password = document.querySelector('input[name=password]').value;
+
+                console.log(username, password)
+
+                let response = await fetch("/login", {
+                    method: "POST",
+                    body: new FormData(document.querySelector('form'))
+                })
+
+                let response_text = await response.text();
+                console.log('response_text', response_text)
+
+
+
+
+            })
+        })
+
+
+
+    </script>
+</head>
+
+
+
+<body>
+    <form method="POST" action="/login">
+        <input type="text" name="username" />
+        <input type="password" name="password" />
+        <button type="submit">Sing in</button>
+    </form>
+</body>
+
+
+
+</html>
